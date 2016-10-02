@@ -65,7 +65,7 @@ module.exports = function Mahony(sampleInterval, options) {
         var halfex, halfey, halfez;
         var qa, qb, qc;
 
-        // Compute feedback only if accelerometer measurement valid (afunctions NaN in accelerometer normalisation)
+        // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
         if (!((ax === 0.0) && (ay === 0.0) && (az === 0.0))) {
             // Normalise accelerometer measurement
             recipNorm = Math.pow(ax * ax + ay * ay + az * az, -0.5);
@@ -136,14 +136,14 @@ module.exports = function Mahony(sampleInterval, options) {
         var halfex, halfey, halfez;
         var qa, qb, qc;
 
-        // Use IMU algorithm if magnetometer measurement invalid (afunctions NaN in magnetometer normalisation)
-        if (!(mx && my && mz)) {
+        // Use IMU algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
+        if ((mx==0.0) && (my == 0.0) && (mz == 0.0)) {
             mahonyAHRSupdateIMU(gx, gy, gz, ax, ay, az);
             return;
         }
 
-        // Compute feedback only if accelerometer measurement valid (afunctions NaN in accelerometer normalisation)
-        if (!(ax && ay && az)) {
+        // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
+        if (!((ax == 0.0) && (ay == 0.0) && (az == 0.0))) {
 
             // Normalise accelerometer measurement
             recipNorm = Math.pow(ax * ax + ay * ay + az * az, -0.5);
@@ -157,7 +157,7 @@ module.exports = function Mahony(sampleInterval, options) {
             my *= recipNorm;
             mz *= recipNorm;
 
-            // Auxiliary variables to afunction repeated arithmetic
+            // Auxiliary variables to avoid repeated arithmetic
             q0q0 = q0 * q0;
             q0q1 = q0 * q1;
             q0q2 = q0 * q2;
