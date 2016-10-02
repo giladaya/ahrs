@@ -68,41 +68,44 @@ module.exports = function Mahony(sampleInterval, options) {
         // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
         if (!((ax === 0.0) && (ay === 0.0) && (az === 0.0))) {
             // Normalise accelerometer measurement
+            // 2.
             recipNorm = Math.pow(ax * ax + ay * ay + az * az, -0.5);
             ax *= recipNorm;
             ay *= recipNorm;
             az *= recipNorm;
 
             // Estimated direction of gravity and vector perpendicular to magnetic flux
+            // 3. get estimated gravity vector d/2 (halfv) from quaternion q
             halfvx = q1 * q3 - q0 * q2;
             halfvy = q0 * q1 + q2 * q3;
             halfvz = q0 * q0 - 0.5 + q3 * q3;
 
+            // 4. Calculate error vector e/2 (halfe)
             // Error is sum of cross product between estimated and measured direction of gravity
             halfex = (ay * halfvz - az * halfvy);
             halfey = (az * halfvx - ax * halfvz);
             halfez = (ax * halfvy - ay * halfvx);
 
-            // Compute and apply integral feedback if enabled
+            // Compute integral feedback if enabled
+            // 5. calculate I term (integralFB)
             if (twoKi > 0.0) {
                 integralFBx += twoKi * halfex * recipSampleFreq; // integral error scaled by Ki
                 integralFBy += twoKi * halfey * recipSampleFreq;
                 integralFBz += twoKi * halfez * recipSampleFreq;
-                gx += integralFBx; // apply integral feedback
-                gy += integralFBy;
-                gz += integralFBz;
             } else {
                 integralFBx = 0.0; // prevent integral windup
                 integralFBy = 0.0;
                 integralFBz = 0.0;
             }
             // Apply proportional feedback
-            gx += twoKp * halfex;
-            gy += twoKp * halfey;
-            gz += twoKp * halfez;
+            // 6. calculate P term and add everything together
+            gx += twoKp * halfex + integralFBx;
+            gy += twoKp * halfey + integralFBy;
+            gz += twoKp * halfez + integralFBz;
         }
 
         // Integrate rate of change of quaternion
+        // 7.
         gx *= (0.5 * recipSampleFreq);         // pre-multiply common factors
         gy *= (0.5 * recipSampleFreq);
         gz *= (0.5 * recipSampleFreq);
@@ -115,6 +118,7 @@ module.exports = function Mahony(sampleInterval, options) {
         q3 += (qa * gz + qb * gy - qc * gx);
 
         // Normalise quaternion
+        // 8.
         recipNorm = Math.pow(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3, -0.5);
         q0 *= recipNorm;
         q1 *= recipNorm;
@@ -146,6 +150,7 @@ module.exports = function Mahony(sampleInterval, options) {
         if (!((ax == 0.0) && (ay == 0.0) && (az == 0.0))) {
 
             // Normalise accelerometer measurement
+            // 2.
             recipNorm = Math.pow(ax * ax + ay * ay + az * az, -0.5);
             ax *= recipNorm;
             ay *= recipNorm;
@@ -176,36 +181,39 @@ module.exports = function Mahony(sampleInterval, options) {
             bz = 2.0 * (mx * (q1q3 - q0q2) + my * (q2q3 + q0q1) + mz * (0.5 - q1q1 - q2q2));
 
             // Estimated direction of gravity and magnetic field
+            // 3. get estimated gravity vector d/2 (halfv) from quaternion 
             halfvx = q1q3 - q0q2;
             halfvy = q0q1 + q2q3;
             halfvz = q0q0 - 0.5 + q3q3;
+            
+            // 3.1. get estimated magnetic field c/2 (halfw) from quaternion 
             halfwx = bx * (0.5 - q2q2 - q3q3) + bz * (q1q3 - q0q2);
             halfwy = bx * (q1q2 - q0q3) + bz * (q0q1 + q2q3);
             halfwz = bx * (q0q2 + q1q3) + bz * (0.5 - q1q1 - q2q2);
 
             // Error is sum of cross product between estimated direction and measured direction of field vectors
+            // 4. calculate error vector e/2 (halfe) e = a x d + m x c
             halfex = (ay * halfvz - az * halfvy) + (my * halfwz - mz * halfwy);
             halfey = (az * halfvx - ax * halfvz) + (mz * halfwx - mx * halfwz);
             halfez = (ax * halfvy - ay * halfvx) + (mx * halfwy - my * halfwx);
 
-            // Compute and apply integral feedback if enabled
+            // Compute integral feedback if enabled
+            // 5. calculate I term (integralFB)
             if (twoKi > 0.0) {
                 integralFBx += twoKi * halfex * recipSampleFreq;  // integral error scaled by Ki
                 integralFBy += twoKi * halfey * recipSampleFreq;
                 integralFBz += twoKi * halfez * recipSampleFreq;
-                gx += integralFBx;  // apply integral feedback
-                gy += integralFBy;
-                gz += integralFBz;
             } else {
                 integralFBx = 0.0;  // prevent integral windup
                 integralFBy = 0.0;
                 integralFBz = 0.0;
             }
-
+            
             // Apply proportional feedback
-            gx += twoKp * halfex;
-            gy += twoKp * halfey;
-            gz += twoKp * halfez;
+            // 6. calculate P term and add everything together
+            gx += twoKp * halfex + integralFBx;
+            gy += twoKp * halfey + integralFBy;
+            gz += twoKp * halfez + integralFBz;
         }
 
         // Integrate rate of change of quaternion
@@ -221,6 +229,7 @@ module.exports = function Mahony(sampleInterval, options) {
         q3 += (qa * gz + qb * gy - qc * gx);
 
         // Normalise quaternion
+        // 8.
         recipNorm = Math.pow(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3, -0.5);
         q0 *= recipNorm;
         q1 *= recipNorm;
