@@ -135,7 +135,7 @@ module.exports = function Mahony(sampleInterval, options) {
         recipSampleFreq = deltaTimeSec || recipSampleFreq;
         var recipNorm;
         var q0q0, q0q1, q0q2, q0q3, q1q1, q1q2, q1q3, q2q2, q2q3, q3q3;
-        var hx, hy, bx, bz;
+        var hx, hy, hz, bx, bz;
         var halfvx, halfvy, halfvz, halfwx, halfwy, halfwz;
         var halfex, halfey, halfez;
         var qa, qb, qc;
@@ -175,10 +175,13 @@ module.exports = function Mahony(sampleInterval, options) {
             q3q3 = q3 * q3;
 
             // Reference direction of Earth's magnetic field
+            // compute flux in the earth frame
             hx = 2.0 * (mx * (0.5 - q2q2 - q3q3) + my * (q1q2 - q0q3) + mz * (q1q3 + q0q2));
             hy = 2.0 * (mx * (q1q2 + q0q3) + my * (0.5 - q1q1 - q3q3) + mz * (q2q3 - q0q1));
+            hz = 2.0 * (mx * (q1q3 - q0q2) + my * (q2q3 + q0q1) + mz * (0.5 - q1q1 - q2q2));
+            // normalise the flux vector to have only components in the x and z
             bx = Math.sqrt(hx * hx + hy * hy);
-            bz = 2.0 * (mx * (q1q3 - q0q2) + my * (q2q3 + q0q1) + mz * (0.5 - q1q1 - q2q2));
+            bz = hz;
 
             // Estimated direction of gravity and magnetic field
             // 3. get estimated gravity vector d/2 (halfv) from quaternion 
