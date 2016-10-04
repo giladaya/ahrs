@@ -312,18 +312,20 @@ module.exports = function DCM(sampleInterval, options) {
     }
 
     function getEulerRad(){
-      var angles = [];
-      angles[1] = Math.asin(DCM_Matrix[2][0]);  //originally -asin
-      angles[2] = Math.atan2(DCM_Matrix[2][1], DCM_Matrix[2][2]);
-      angles[0] = Math.atan2(DCM_Matrix[1][0], DCM_Matrix[0][0]);
+      var angles = {
+          pitch: Math.asin(DCM_Matrix[2][0]),  //originally -asin
+          roll: Math.atan2(DCM_Matrix[2][1], DCM_Matrix[2][2]),
+          heading: Math.atan2(DCM_Matrix[1][0], DCM_Matrix[0][0])
+      }
       return angles;
     }
 
     function getEulerDeg(){
-      var angles = [];
-      angles[1] = TO_DEG(Math.asin(DCM_Matrix[2][0]));
-      angles[2] = TO_DEG(Math.atan2(DCM_Matrix[2][1], DCM_Matrix[2][2]));
-      angles[0] = TO_DEG(Math.atan2(DCM_Matrix[1][0], DCM_Matrix[0][0]));
+      var angles = {
+          pitch: TO_DEG(Math.asin(DCM_Matrix[2][0])),
+          roll: TO_DEG(Math.atan2(DCM_Matrix[2][1], DCM_Matrix[2][2])),
+          heading: TO_DEG(Math.atan2(DCM_Matrix[1][0], DCM_Matrix[0][0]))
+      }
       return angles;
     }
 
