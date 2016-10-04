@@ -25,7 +25,7 @@ module.exports = function DCM(sampleInterval, options) {
 
     //------------------------------------------------------------
     // Variables and constants from original h file
-    var GRAVITY = 9.8;//1.0;
+    var GRAVITY = 1.0;
     
     function TO_RAD(x){
         return x * Math.PI / 180;
