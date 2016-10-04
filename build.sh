@@ -17,6 +17,7 @@ fi
 # Build www-ahrs
 $BRSFY  -r $SRC_DIR/Madgwick.js:./Madgwick                 \
         -r $SRC_DIR/Mahony.js:./Mahony                     \
+        -r $SRC_DIR/DCM.js:./DCM                     \
         -r $SRC_DIR/index.js:ahrs                          \
         --outfile $WWW_DIR/$TARGET
 

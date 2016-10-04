@@ -33,6 +33,8 @@ function AHRS(options) {
         algorithmFn = new (require('./Mahony'))(sampleInterval, options);
     } else if (algorithmName === 'Madgwick') {
         algorithmFn = new (require('./Madgwick'))(sampleInterval, options);
+    } else if (algorithmName === 'DCM') {
+        algorithmFn = new (require('./DCM'))(sampleInterval, options);
     } else {
         throw new Error('AHRS(): Algorithm not valid: ', algorithmName);
     }
@@ -76,6 +78,9 @@ AHRS.prototype.toVector = function () {
  * @return {object} {heading, pitch, roll} in radians
  */
 AHRS.prototype.getEulerAngles = function() {
+    if (typeof this.getEulerRad == 'function'){
+        return this.getEulerRad();
+    }
     var q = this.getQuaternion();
     var ww = q.w * q.w, xx = q.x * q.x, yy = q.y * q.y, zz = q.z * q.z;
     return {

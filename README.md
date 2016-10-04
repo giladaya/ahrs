@@ -29,7 +29,15 @@ var madgwick = new AHRS({
      * The filter noise values for the `Mahony` filter.
      */
     kp: 0.5,
-    ki: 0
+    ki: 0,
+
+    /*
+     * Values for the 'DCM' filter
+     */
+    kp_rollPitch: 1.2,
+    ki_rollPitch: 0.0234, 
+    kp_yaw: 1.75, 
+    ki_yaw: 0.002
 });
 
 madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, compass.x, compass.y, compass.z);
@@ -59,6 +67,18 @@ values do not have to be sent through for every update, since the magnetometer t
 - gyroscope: radians / s
 - accelerometer: g, where 1 g is 9.81 m/s²
 - magnetometer: unitless, but a relative proportion of the Earth's magnetic field
+
+*returns:* nothing.
+
+##### update(gx, gy, gz, ax, ay, az, heading, deltaTimeSec)
+Update the AHRS filter with up-to-date, unfiltered values from the gyroscope (gx, gy, gz), the accelerometer (ax, ay, az), the compass heading and
+optionally the elapsed time (in seconds) since the last reading.
+
+*Units*
+
+- gyroscope: radians / s
+- accelerometer: g, where 1 g is 9.81 m/s²
+- heading: degrees from north [0-360]
 
 *returns:* nothing.
 
