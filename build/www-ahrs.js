@@ -26,7 +26,7 @@ module.exports = function DCM(sampleInterval, options) {
 
     //------------------------------------------------------------
     // Variables and constants from original h file
-    var GRAVITY = 1.0;
+    var GRAVITY = 9.8;//1.0;
     
     function TO_RAD(x){
         return x * Math.PI / 180;
@@ -248,9 +248,7 @@ module.exports = function DCM(sampleInterval, options) {
       // Calculate the magnitude of the accelerometer vector
 
       // Store the acceleration in a vector
-      Accel_Vector[0] = accel[0];
-      Accel_Vector[1] = accel[1];
-      Accel_Vector[2] = accel[2];
+      Accel_Vector = accel;
       Accel_magnitude = Math.sqrt(Accel_Vector[0]*Accel_Vector[0] + Accel_Vector[1]*Accel_Vector[1] + Accel_Vector[2]*Accel_Vector[2]);
       Accel_magnitude = Accel_magnitude / GRAVITY; // Scale to gravity.
 
@@ -351,6 +349,8 @@ module.exports = function DCM(sampleInterval, options) {
     }
 
     function calDCM(gx, gy, gz, ax, ay, az, heading, deltaTimeSec) {
+        heading = TO_RAD(heading);
+
         if (DCM_Matrix == null){
           DCM_Matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
           reset_sensor_fusion([ax, ay, az], heading);
