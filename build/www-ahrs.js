@@ -366,7 +366,9 @@ module.exports = function DCM(sampleInterval, options) {
 
     return {
         update: calDCM,
-        getQuaternion: getDCM2Q
+        getQuaternion: getDCM2Q,
+        getEulerRad: getEulerRad,
+        getEulerDeg: getEulerDeg
     };
 
     //====================================================================================================
