@@ -352,7 +352,7 @@ module.exports = function DCM(sampleInterval, options) {
     function calDCM(gx, gy, gz, ax, ay, az, heading, deltaTimeSec) {
         if (DCM_Matrix == null){
           DCM_Matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
-          reset_sensor_fusion(ax, ay, az, heading);
+          reset_sensor_fusion([ax, ay, az], heading);
         }
 
         Matrix_update([gx, gy, gz], [ax, ay, az], deltaTimeSec);
