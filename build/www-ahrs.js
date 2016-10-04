@@ -289,9 +289,9 @@ module.exports = function DCM(sampleInterval, options) {
       var Omega_Vector = [0, 0, 0]; // Corrected Gyro_Vector data
       var Omega = [0, 0, 0];
 
-      var gRoll = TO_RAD(gyro[0]); //gyro x roll 
+      var Gyro_vector = gyro; //radians
 
-      Omega = Vector_Add(gRoll, Omega_I);  //adding proportional term
+      Omega = Vector_Add(Gyro_vector, Omega_I);  //adding proportional term
       Omega_Vector = Vector_Add(Omega, Omega_P); //adding Integrator term
       
       // Use drift correction
@@ -946,6 +946,5 @@ AHRS.prototype.getEulerAngles = function() {
 };
 
 module.exports = AHRS;
-
 
 },{"./DCM":"./DCM","./Madgwick":"./Madgwick","./Mahony":"./Mahony"}]},{},[]);
