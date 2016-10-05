@@ -360,8 +360,11 @@ module.exports = function DCM(sampleInterval, options) {
 
         Matrix_update([gx, gy, gz], [ax, ay, az], deltaTimeSec);
         Normalize();
-        Drift_correction([gx, gy, gz], [ax, ay, az], heading);
         
+        if (!((ax == 0.0) && (ay == 0.0) && (az == 0.0))) {
+            Drift_correction([gx, gy, gz], [ax, ay, az], heading);
+        }
+
         timestamp_old = timestamp;
         timestamp = Date.now();
     }
